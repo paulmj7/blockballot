@@ -1,0 +1,8 @@
+{
+  "name": "blockballot",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": "https://github.com/paulmj7/blockballot.git",
+  "author": "Paul Jones <paulj51299@gmail.com>",
+  "license": "MIT"
+}
