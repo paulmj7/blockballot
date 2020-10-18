@@ -2,6 +2,8 @@
 
 BlockBallot is a blockchain-based voting web application created for HackNC!
 
+Learning resource: https://developer.ibm.com/technologies/blockchain/tutorials/develop-a-blockchain-application-from-scratch-in-python/
+
 ## Authors
 
 - Paul Jones, University of North Carolina at Chapel Hill
