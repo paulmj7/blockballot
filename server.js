@@ -1,6 +1,6 @@
 //import { sha256 } from 'js-sha256';
-const SHA256 = require('crypto-js/sha256');
-
+//const SHA256 = require('crypto-js/sha256');
+const crypto = require('crypto');
 
 
 class Block{
@@ -16,9 +16,10 @@ class Block{
 
 
     ComputeHash(){
-    let jsonMap = JSON.stringify([...map.entries()]);
-    let block_string = new Map(JSON.parse(jsonMap));
-    return SHA256(this.BlockID + this.previousHash + this.timestamp + JSON.stringify(this.data)).toString();
+    //let jsonMap = JSON.stringify([...map.entries()]);
+    //let block_string = new Map(JSON.parse(jsonMap));
+    //return SHA256(this.BlockID + this.previousHash + this.timestamp + JSON.stringify(this.data)).toString();
+    return crypto.createHash('sha256').update(this.BlockID + this.previousHash + this.timestamp + JSON.stringify(this.data)).digest('hex');
     }
 
 }
@@ -66,18 +67,6 @@ class Blockchain{
     }
 
 
-    // function proof_of_work(block){
-    //     block.Nonce = 0;
-
-    //     var computed_hash = ComputeHash(block);
-    //     while not (computed_hash.startswith('0' * diffculty)){
-    //         block.Nonce += 1;
-    //         computed_hash = ComputeHash(block);
-    //     }
-
-    //     return computed_hash;
-    // }
-
 }
 
 
@@ -89,6 +78,9 @@ comcoin.add_block(new Block(2, "10/17/2020", { amount: 10}));
 
 console.log('Block chain validity' + comcoin.Valid_check())
 console.log(JSON.stringify(comcoin, null, 4));
+
+comcoin.chain[1]. data = { amount: 100};
+console.log('Block chain validity' + comcoin.Valid_check())
 
 
 
