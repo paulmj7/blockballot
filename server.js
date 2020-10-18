@@ -1,4 +1,3 @@
-// Enter code here
 //import { sha256 } from 'js-sha256';
 const SHA256 = require('crypto-js/sha256');
 
@@ -17,8 +16,8 @@ class Block{
 
 
     ComputeHash(){
-    //let jsonMap = JSON.stringify([...map.entries()]);
-    //let block_string = new Map(JSON.parse(jsonMap));
+    let jsonMap = JSON.stringify([...map.entries()]);
+    let block_string = new Map(JSON.parse(jsonMap));
     return SHA256(this.BlockID + this.previousHash + this.timestamp + JSON.stringify(this.data)).toString();
     }
 
@@ -44,7 +43,7 @@ class Blockchain{
     //Add a new block to the chain
     add_block(newBlock){
         newBlock.previousHash = this.get_last_block().hash;
-        newBlock.hash = newBlock.ComputeHash;
+        newBlock.hash = newBlock.ComputeHash();
         this.chain.push(newBlock);
     }
 
