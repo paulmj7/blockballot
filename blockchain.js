@@ -102,3 +102,5 @@ console.log(JSON.stringify(comcoin, null, 4));
 
 
 
+module.exports.Blockchain = Blockchain;
+module.exports.Block = Block;

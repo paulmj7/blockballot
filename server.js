@@ -1,5 +1,6 @@
 const express = require("express");
 const path = require("path");
+const {Blockchain, Block} = require('./blockchain');
 
 const app = express();
 const port = 3000;
@@ -55,12 +56,13 @@ app.post("/register_with", (req, res) => {
     if (!nodeAddress) res.send(400);
     const data = { "node_address": req.url };
     const headers = { "Content-Type": "application/json"};
-    // FINISH
+    //FINISH THIS
 });
 
 const createChainFromDump = (chainDump) => {
-    const blockchain = new Blockchain();
-    // FINISH
+    const generatedblockchain = new Blockchain();
+    generatedblockchain.create_genesis_block();
+    //FINISH THIS
 }
 
 app.listen(port, () => {
