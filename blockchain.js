@@ -1,42 +1,53 @@
-//import { sha256 } from 'js-sha256';
-//const SHA256 = require('crypto-js/sha256');
+const SHA256 = require('crypto-js/sha256');
 const crypto = require('crypto');
 
 
 class Block{
     constructor(BlockID,timestamp, data, previousHash = ''){
-        this.BlockID =BlockID;
-        this.timestamp = timestamp;
-        this.data = data;
-        this.previousHash = previousHash;
-        this.hash = this.ComputeHash();
+        this.BlockID =BlockID; //Index number
+        this.timestamp = timestamp; 
+        this.data = data; //jason data input
+        this.previousHash = previousHash; 
+        this.hash = this.ComputeHash(); //current calculated hash
+        this.nonce = 0;
     }
 
     
-
-
+//Calculate hash number from crypto
     ComputeHash(){
-    //let jsonMap = JSON.stringify([...map.entries()]);
-    //let block_string = new Map(JSON.parse(jsonMap));
-    //return SHA256(this.BlockID + this.previousHash + this.timestamp + JSON.stringify(this.data)).toString();
-    return crypto.createHash('sha256').update(JSON.stringify(this.data)).digest('hex');
+
+    //return SHA256(this.BlockID + this.previousHash + this.timestamp + JSON.stringify(this.data)+ this.nonce).toString();
+    return crypto.createHash('sha256').update(this.BlockID + this.previousHash + this.timestamp + JSON.stringify(this.data) + this.nonce).digest('hex');
+    }
+
+//Hash complexity settings
+    mineBlock(difficulty){
+        while(this.hash.substring(0, difficulty) !== Array(difficulty + 1).join("0")){
+            this.nonce++;
+            this.hash = this.ComputeHash();
+        }
+        console.log("Block mined:  " + this.hash);
+
+        //return this.hash;
     }
 
 }
+
+
+
 class Blockchain{
 
     constructor(){
-    //ar diffculty = 2;
+
         this.chain = [this.create_genesis_block()];
+        this.difficulty = 2;
     }
 
     create_genesis_block(){
-        //var genesis_block = Block(0,[],0,"0",0);
-        //genesis_block.8 = ComputeHash(genesis_block);
-        //chain.push(genesis_block);
-        return new Block(0, "10/17/20", "Genesis block", "0");
-    }
 
+        return new Block(0, Date(Date.now()), "Genesis block", "0");
+    }
+    //latest block of the chain
     get_last_block(){
         return this.chain[this.chain.length - 1];
     }
@@ -44,7 +55,8 @@ class Blockchain{
     //Add a new block to the chain
     add_block(newBlock){
         newBlock.previousHash = this.get_last_block().hash;
-        newBlock.hash = newBlock.ComputeHash();
+        //newBlock.hash = newBlock.ComputeHash();
+        newBlock.mineBlock(this.difficulty);
         this.chain.push(newBlock);
     }
 
@@ -70,18 +82,23 @@ class Blockchain{
 }
 
 
-//Just for testing purpose
+//Dummy data
 let comcoin = new Blockchain();
-comcoin.add_block(new Block(1, "10/17/2020", { amount: 4 }));
-comcoin.add_block(new Block(2, "10/17/2020", { amount: 10}));
+
+console.log('Mining block 1 ...')
+comcoin.add_block(new Block(1, Date(Date.now()), { amount: 4 }));
+
+console.log('Mining block 2 ...')
+comcoin.add_block(new Block(2, Date(Date.now()), { amount: 10}));
 
 
-console.log('Block chain validity' + comcoin.Valid_check())
-console.log(comcoin.chain);
+console.log('Block chain validity: ' + comcoin.Valid_check())
+console.log(JSON.stringify(comcoin, null, 4));
 
-comcoin.chain[1]. data = { amount: 100};
-console.log('Block chain validity' + comcoin.Valid_check())
-console.log(comcoin.chain)
+
+//Test for force changing data after block chain generation
+//comcoin.chain[1]. data = { amount: 100};
+//console.log('Block chain validity' + comcoin.Valid_check())
 
 
 
