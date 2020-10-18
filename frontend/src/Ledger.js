@@ -2,15 +2,24 @@ import React, { useState } from "react";
 
 export default function Ledger() {
     const [xActions, setXActions] = useState({});
+    const handleClick = (event) => {
+        event.preventDefault();
+    }
+    const reloadButton = (
+        <div>
+            <button className="btn btn-primary reload-button" onClick={handleClick}>Reload</button>
+        </div>
+    )
     return (
         <div>
-            <table className="table">
+            {reloadButton}
+            <table className="table ledger-table">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
+                        <th scope="col">Gov ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Vote</th>
                     </tr>
                 </thead>
                 <tbody>
