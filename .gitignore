@@ -7,3 +7,4 @@
 .pnp.js
 package-lock.json
 yarn.lock
+.env
