@@ -17,7 +17,13 @@ class BallotForm extends Component {
     };
     handleSubmit(event) {
         event.preventDefault();
-        console.log(this.state);
+        fetch("http://localhost:3000/new_transaction", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(this.state)
+        });
         this.setState({
             gov_id: "",
             name: "",

@@ -6,7 +6,7 @@ class Block{
     constructor(BlockID,timestamp, data, previousHash = ''){
         this.BlockID =BlockID; //Index number
         this.timestamp = timestamp; 
-        this.data = data; //jason data input
+        this.data = data; //json data input
         this.previousHash = previousHash; 
         this.hash = this.ComputeHash(); //current calculated hash
         this.nonce = 0;
@@ -44,8 +44,7 @@ class Blockchain{
     }
 
     create_genesis_block(){
-
-        return new Block(0, Date(Date.now()), "Genesis block", "0");
+        return new Block(0, Date(Date.now()), JSON.stringify({ "ballot": "none", "gov_id": "0", "name": "Genesis Block"}), "0");
     }
     //latest block of the chain
     get_last_block(){
@@ -56,7 +55,7 @@ class Blockchain{
     add_block(newBlock){
         newBlock.previousHash = this.get_last_block().hash;
         //newBlock.hash = newBlock.ComputeHash();
-        newBlock.mineBlock(this.difficulty);
+        //newBlock.mineBlock(this.difficulty);
         this.chain.push(newBlock);
     }
 
@@ -80,25 +79,6 @@ class Blockchain{
 
 
 }
-
-
-//Dummy data
-let comcoin = new Blockchain();
-
-console.log('Mining block 1 ...')
-comcoin.add_block(new Block(1, Date(Date.now()), { amount: 4 }));
-
-console.log('Mining block 2 ...')
-comcoin.add_block(new Block(2, Date(Date.now()), { amount: 10}));
-
-
-console.log('Block chain validity: ' + comcoin.Valid_check())
-console.log(JSON.stringify(comcoin, null, 4));
-
-
-//Test for force changing data after block chain generation
-//comcoin.chain[1]. data = { amount: 100};
-//console.log('Block chain validity' + comcoin.Valid_check())
 
 
 

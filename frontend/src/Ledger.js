@@ -1,9 +1,32 @@
 import React, { useState } from "react";
 
+function tableBody(data) {
+    let i = 0;
+    return (
+        <tbody>
+            {data.slice(1, data.length).map(function(item, key) {
+                return (
+                    <tr key={key}>
+                        <th scope="row">{++i}</th>
+                        <td>{item.gov_id}</td>
+                        <td>{item.name}</td>
+                        <td>{item.ballot}</td>
+                    </tr>
+                )
+            })}
+        </tbody>
+    )
+}
+
 export default function Ledger() {
-    const [xActions, setXActions] = useState({});
+    const [xActions, setXActions] = useState([]);
     const handleClick = (event) => {
         event.preventDefault();
+        fetch("http://localhost:3000/chain")
+        .then(res => res.json())
+        .then(data => {
+            setXActions(data);
+        });
     }
     const reloadButton = (
         <div>
@@ -22,26 +45,7 @@ export default function Ledger() {
                         <th scope="col">Vote</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                    <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
-                </tbody>
+                {tableBody(xActions)}
             </table>
         </div>
     )
