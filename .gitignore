@@ -5,3 +5,5 @@
 .env.test.local
 .env.production.local
 .pnp.js
+package-lock.json
+yarn.lock

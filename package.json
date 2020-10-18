@@ -4,5 +4,8 @@
   "main": "server.js",
   "repository": "https://github.com/paulmj7/blockballot.git",
   "author": "Paul Jones <paulj51299@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
