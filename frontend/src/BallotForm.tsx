@@ -1,8 +1,14 @@
 import React, { Component } from "react";
 
-class BallotForm extends Component {
+interface IFormState {
+    gov_id: string,
+    name: string,
+    ballot: string
+}
+
+class BallotForm extends Component<{}, IFormState> {
     constructor() {
-        super();
+        super({});
         this.state = {
             gov_id: "",
             name: "",
@@ -12,8 +18,9 @@ class BallotForm extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     };
-    handleChange(event) {
-        this.setState({ [event.target.name]: event.target.value });
+    handleChange(event: { target: { name: keyof IFormState ; value: any; }; }) {
+        const state = { [event.target.name]: event.target.value } as Pick<IFormState, keyof IFormState>;
+        this.setState(state);
     };
     handleSubmit(event) {
         event.preventDefault();
