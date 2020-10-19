@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 const https = require("https");
 const bodyParser = require("body-parser");
-const {Blockchain, Block} = require('./blockchain');
+const { Blockchain, Block } = require('./blockchain');
 
 const app = express();
 const port = 3000;
@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 const bc = new Blockchain();
-let peers = new Set();
+let peers: any = new Set();
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname + "/frontend", "build", "index.html"));
@@ -30,13 +30,13 @@ app.post("/new_transaction", (req, res) => {
 });
 
 app.get("/chain", (req, res) => {
-    chainData = bc.chain.slice();
+    const chainData = bc.chain.slice();
     console.log(JSON.stringify(chainData));
     res.json(chainData);
 });
 
 app.get("/mine", (req, res) => {
-    result = bc.mine();
+    const result = bc.mine();
     if (!result) res.send(400);
     else {
         const chainLength = bc.chain.length;
@@ -51,14 +51,14 @@ app.get("/pending_tx", (req, res) => {
 });
 
 app.post("/register_node", (req, res) => {
-    nodeAddress = req.body.node_address;
+    const nodeAddress = req.body.node_address;
     if (!nodeAddress) res.send(400);
     peers.add(nodeAddress);
     res.send(JSON.stringify(bc.chain));
 });
 
 app.post("/register_with", (req, res) => {
-    nodeAddress = req.body.node_address;
+    const nodeAddress = req.body.node_address;
     if (!nodeAddress) res.send(400);
     const data = { "node_address": req.url };
     const options = {
@@ -73,8 +73,8 @@ app.post("/register_with", (req, res) => {
             console.error(error);
         });
         if (response.statusCode === 200) {
-            chainDump = response.body.chain;
-            blockchain = createChainFromDump(chainDump);
+            const chainDump = response.body.chain;
+            const blockchain = createChainFromDump(chainDump);
             let merged = new Set(...peers, ...new Set(response.body.peers));
             peers = merged;
         } else registerError = true;
@@ -94,8 +94,8 @@ app.post("/add_block", (req, res) => {
 });
 
 const announceNewBlock = (block) => {
-    for (peer in peers) {
-        const url = "peer" + "/add_block";
+    for (let i: number = 0; i < peers.keys().length; i++) {
+        const url = peers.keys()[i] + "/add_block";
         const options = {
             url: url,
             method: "POST",
@@ -104,7 +104,7 @@ const announceNewBlock = (block) => {
             },
             body: JSON.stringify(block)
         }
-        const request = http.request(options, (response) => {
+        const request = https.request(options, (response) => {
             console.log(response.statusCode);
         });
         request.end();
@@ -113,14 +113,14 @@ const announceNewBlock = (block) => {
 
 const createChainFromDump = (chainDump) => {
     const generatedBlockchain = new Blockchain();
-    for (item in chainDump) {
-        const newBlock = new Block(item.block_data.index, item.block_data.transactions, item.block_data.timestamp, item.block_data.prevHash);
-        const proof = item.block_data.hash;
-        if (item.idx > 0) {
+    for (let i: number = 0; i < chainDump.length; i++) {
+        const newBlock = new Block(chainDump[i].block_data.index, chainDump[i].block_data.transactions, chainDump[i].block_data.timestamp);
+        const proof = chainDump[i].block_data.hash;
+        if (chainDump[i].idx > 0) {
             const added = generatedBlockchain.addBlock(newBlock, proof);
             if (!added) throw new Error("Tampered with");
         } else {
-            generatedBlockChain.chain.push(newBlock);
+            generatedBlockchain.chain.push(newBlock);
         }
     }
 }
@@ -128,9 +128,9 @@ const createChainFromDump = (chainDump) => {
 const consensus = () => {
     let longestChain = null;
     let currLen = bc.chain.chain.length;
-    for (node in peers) {
+    for (let i: number = 0; i < peers.keys().length; i++) {
         const options = {
-            hostname: node,
+            hostname: peers.keys()[i],
             path: "/chain",
             method: "GET"
         };
